@@ -1,3 +1,5 @@
+CREATE DATABASE registro;
+
 CREATE TABLE maquina(
     maquina_codigo INT NOT NULL AUTO_INCREMENT,
     maquina_nome VARCHAR(100) NOT NULL,
