@@ -10,14 +10,10 @@ export default class InstrucaoCtrl {
         resposta.type('application/json');
         if (requisicao.method === 'POST' && requisicao.is('application/json')) {
             const dados = requisicao.body;
-            const descricao = dados.descricao;
-            const codigoMaquina = dados.codigoMaquina;
-    
-            if (descricao && codigoMaquina) {
-                // Aqui vamos criar um objeto Autor com base no autorCodigo fornecido
-                const maquina = new Maquina(codigoMaquina); // ou como você criar um Autor com base no código
-    
-                const instrucao = new Instrucao(0, descricao, maquina);
+            if (dados && dados.descricao && dados.codigoMaquina) { 
+                const { descricao, codigoMaquina } = dados; 
+                
+                const instrucao = new Instrucao(0, descricao, codigoMaquina);
     
                 instrucao.gravar().then(() => {
                     resposta.status(200).json({
@@ -25,16 +21,16 @@ export default class InstrucaoCtrl {
                         "mensagem": "Instrucao gravada com sucesso!"
                     });
                 })
-                    .catch((erro) => {
-                        resposta.status(500).json({
-                            "status": false,
-                            "mensagem": "Erro ao registrar a instrucao:" + erro.message
-                        });
+                .catch((erro) => {
+                    resposta.status(500).json({
+                        "status": false,
+                        "mensagem": "Erro ao registrar a instrucao:" + erro.message
                     });
+                });
             } else {
                 resposta.status(400).json({
                     "status": false,
-                    "mensagem": "Por favor, forneça os dados da instrucao conforme a documentação da API!"
+                    "mensagem": "Por favor, forneça os dados da instrucao conforme a documentação da API!"+dados
                 });
             }
         } else {
@@ -44,6 +40,7 @@ export default class InstrucaoCtrl {
             });
         }
     }
+    
     
     atualizar(requisicao, resposta) {
         resposta.type('application/json');
@@ -122,18 +119,63 @@ export default class InstrucaoCtrl {
         }
     }
 
-    consultar(requisicao, resposta) {
+    async consultar(requisicao, resposta) {
         resposta.type('application/json');
         //express, por meio do controle de rotas, será
         //preparado para esperar um termo de busca
-        let termo = requisicao.params.termo;
-        if (termo === undefined || termo === null) {
-            termo = ""; // Define termo como uma string vazia apenas se for undefined ou null
+        const originalUrl = requisicao.originalUrl;
+        const parametros = originalUrl.split('/');
+        let termo = parametros[parametros.length - 1];
+        let listaInstrucoes = [];
+
+        if(termo == ""){           
+            const instrucao = new Instrucao();
+            listaInstrucoes = await instrucao.consultar(termo);
+        } else{                    
+            const instrucao = new Instrucao();
+            listaInstrucoes = await instrucao.consultar(termo);
         }
         
         if (requisicao.method === "GET") {
             const instrucao = new Instrucao();
             instrucao.consultar(termo).then((listaInstrucoes) => {
+                resposta.json(
+                    {
+                        status: true,
+                        listaInstrucoes
+                    });
+            })
+                .catch((erro) => {
+                    resposta.json(
+                        {
+                            status: false,
+                            mensagem: "Não foi possível obter as instrucoes: " + erro.message
+                        }
+                    );
+                });
+        }
+        else {
+            resposta.status(400).json({
+                "status": false,
+                "mensagem": "Por favor, utilize o método GET para consultar instrucoes!"
+            });
+        }
+    }
+    async consultarMaquina(requisicao, resposta) {
+        resposta.type('application/json');
+        //express, por meio do controle de rotas, será
+        //preparado para esperar um termo de busca
+        const originalUrl = requisicao.originalUrl;
+        const parametros = originalUrl.split('/');
+        let termo = parametros[parametros.length - 1];
+        let listaInstrucoes = [];
+        //console.log(termo);        
+        const instrucao = new Instrucao();
+        listaInstrucoes = await instrucao.consultarMaquina(termo);        
+        
+        if (requisicao.method === "GET") {
+            const instrucao = new Instrucao();
+            instrucao.consultarMaquina(termo).then((listaInstrucoes) => {
                 resposta.json(
                     {
                         status: true,

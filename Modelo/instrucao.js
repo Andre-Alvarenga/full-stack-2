@@ -6,14 +6,14 @@ export default class Instrucao {
 
     #codigo;
     #descricao;
-    #maquina;
+    codMaquina;
 
 
-    constructor(codigo = 0, descricao = '', maquina={}) 
+    constructor(codigo = 0, descricao = '', codMaquina) 
     {
         this.codigo = codigo;
         this.#descricao = descricao;
-        this.#maquina = maquina;
+        this.codMaquina = codMaquina;
     }
 
     get codigo() {
@@ -33,18 +33,18 @@ export default class Instrucao {
     }
 
     get maquina() {
-        return this.#maquina;
+        return this.codMaquina;
     }
 
-    set maquina(maquina) {
-        this.#maquina = maquina;
+    set maquina(codMaquina) {
+        this.codMaquina = codMaquina;
     }
 
     toJson() {
         return {
             codigo:this.#codigo,
             descricao:this.#descricao,
-            maquina:this.#maquina,
+            codMaquina:this.codMaquina,
         }
     }
 
@@ -67,4 +67,10 @@ export default class Instrucao {
         const instrucaoDAO = new InstrucaoDAO();
         return await instrucaoDAO.consultar(termo);
      }
+     async consultarMaquina(termo){
+        const instrucaoDAO = new InstrucaoDAO();
+        return await instrucaoDAO.consultarMaquina(termo);
+     }
+
+
 }

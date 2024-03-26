@@ -6,10 +6,10 @@ export default async function conectar(){
     }
     else{
         const pool = mysql.createPool({
-            host: '129.146.68.51',
-            user: 'andre', //jamais faça isso
-            password:'master10',  //never, nunca, jamais
-            database: 'registro',
+            host: process.env.DB_HOST,
+            user: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
+            database: process.env.DB_DATABASE,
             waitForConnections: true,
             connectionLimit: 10,
             maxIdle: 10, // max idle connections, the default value is the same as `connectionLimit`

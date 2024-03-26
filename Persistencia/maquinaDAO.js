@@ -59,8 +59,7 @@ export default class MaquinaDAO {
             listaMaquinas.push({
                 codigo: maquina.codigo,
                 nome: maquina.nome
-            });
-            console.log(listaMaquinas)
+            });            
         }
         return listaMaquinas;
     }

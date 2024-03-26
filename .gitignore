@@ -1,0 +1,20 @@
+# Arquivos de configuração locais
+.env
+
+# Módulos e pacotes do Node.js
+/node_modules
+
+# Arquivos de log
+logs
+*.log*
+
+# Arquivos de build e compilados
+/build
+/dist
+
+# Arquivos de backup
+*.bak
+
+# Arquivos temporários
+.tmp
+.temp
